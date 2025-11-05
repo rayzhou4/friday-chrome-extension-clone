@@ -114,3 +114,143 @@
     flex-direction: column;
   }
 }
+
+/* Sidebar / extension-like UI styles */
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+.panel {
+  width: 360px;
+  background: #111216; /* very dark */
+  color: #dbe9f6;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.6);
+  padding: 18px 18px;
+  font-family: Inter, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+.section {
+  margin-bottom: 18px;
+}
+
+.heading {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.creditRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  color: #9fb0c9;
+}
+
+.creditLabel {
+  font-size: 14px;
+}
+
+.creditValue {
+  font-size: 14px;
+  color: #e6eef3;
+}
+
+.progressTrack {
+  height: 10px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg,#2f9df8,#4db6ff);
+  border-radius: 999px;
+}
+
+.subheading {
+  margin: 4px 0 12px 0;
+  font-size: 16px;
+  color: #b8c8d8;
+}
+
+.accountRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: #ff6188;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.accountInfo {
+  flex: 1;
+}
+
+.accountEmail {
+  font-size: 15px;
+  color: #e8f2fb;
+}
+
+.check {
+  color: #26d07a;
+  font-weight: 700;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(255,255,255,0.04);
+  margin: 12px 0;
+}
+
+.action {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  background: transparent;
+  border: none;
+  color: #b3c6d9;
+  text-align: left;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.action:hover {
+  background: rgba(255,255,255,0.02);
+  color: #e6eef3;
+}
+
+.icon {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  color: #9fb0c9;
+}
+
+.footer {
+  display: none;
+}

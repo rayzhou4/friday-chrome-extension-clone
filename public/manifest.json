@@ -10,14 +10,26 @@
     "48": "/icons/favicon-48.png",
     "128": "/icons/favicon-128.png"
   },
-  "permissions": [],
+  "permissions": [
+    "storage",
+    "identity",
+    "scripting"
+  ],
+  "background": {
+    "service_worker": "./src/background.js",
+    "type": "module"
+  },
   "content_scripts": [
     {
-      "matches": ["https://*/*", "http://*/*"],
-      "js": ["inject.js"]
+      "matches": ["https://mail.google.com/*"],
+      "js": ["./src/inject.js"],
+      "run_at": "document_end"
     }
   ],
-  "host_permissions": ["<all_urls>"],
+  "host_permissions": [
+    "https://mail.google.com/*",
+    "https://www.googleapis.com/*"
+  ],
   "action": {
     "default_popup": "index.html"
   }
