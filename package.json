@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "npm-watch",
     "build": "next build && next export && npm run lint:build",
-    "lint:build": "mv out/_next out/assets && gsed -i 's/\\/_next/\\/assets/g' out/**.html",
+    "lint:build": "mv out/_next out/assets && sed -i 's/\\/_next/\\/assets/g' out/*.html",
     "lint": "next lint"
   },
   "dependencies": {
