@@ -1,6 +1,4 @@
-// modules/gmail.js
-// Lightweight helpers for interacting with Gmail DOM for the prototype.
-// These functions are intentionally defensive because Gmail's DOM can change.
+/* public/src/modules/gmail.js removed — Gmail DOM helpers are not needed for auth-only cleanup. */
 
 export function getUserEmail() {
   try {

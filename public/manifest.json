@@ -13,22 +13,20 @@
   "permissions": [
     "storage",
     "identity",
-    "scripting"
+    "scripting",
+    "tabs"
   ],
-  "background": {
-    "service_worker": "./src/background.js",
-    "type": "module"
-  },
+  "host_permissions": [
+    "https://mail.google.com/*",
+    "https://www.googleapis.com/*",
+    "<all_urls>"
+  ],
   "content_scripts": [
     {
       "matches": ["https://mail.google.com/*"],
       "js": ["./src/inject.js"],
-      "run_at": "document_end"
+      "run_at": "document_idle"
     }
-  ],
-  "host_permissions": [
-    "https://mail.google.com/*",
-    "https://www.googleapis.com/*"
   ],
   "action": {
     "default_popup": "index.html"
