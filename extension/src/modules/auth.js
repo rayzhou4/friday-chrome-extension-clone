@@ -25,6 +25,7 @@ export class SessionManager {
             provider: 'google',
             options: {
               redirectTo,
+              scopes: "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://mail.google.com/ https://www.googleapis.com/auth/contacts.other.readonly",
               skipBrowserRedirect: true,
               queryParams: {
                 access_type: 'offline',
@@ -53,7 +54,6 @@ export class SessionManager {
           throw new Error('No response URL received from OAuth flow');
         }
 
-        console.log('OAuth response URL:', responseUrl);
         const fragment = responseUrl.split('#')[1];
         const params = new URLSearchParams(fragment);
         const code = params.get('access_token');
