@@ -7,13 +7,18 @@ export default function Home() {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState(null)
+  const [mgr, setMgr] = useState(null);
 
   useEffect(() => {
     // Create SessionManager and query current user (uses chrome.storage)
     if (typeof chrome !== 'undefined' && chrome.storage) {
       try {
-        const mgr = new SessionManager();
-        mgr.getCurrentUser().then((u) => { if (u) setUser(u); }).catch(() => {});
+        if (mgr) return; // already initialized
+
+        const sessionManager = new SessionManager();
+        sessionManager.getCurrentUser().then((u) => { if (u) setUser(u); }).catch(() => { });
+
+        setMgr(sessionManager);
       } catch (err) {
         console.warn('SessionManager getCurrentUser failed', err)
       }
@@ -27,14 +32,16 @@ export default function Home() {
     }
 
     setLoading(true)
-    const mgr = new SessionManager()
+
     mgr.signInWithGoogleIdentity('popup sign-in').then((session) => {
       setLoading(false)
       setErrorMsg(null)
-      if (session && session.user) setUser(session.user)
-      else if (session && session.access_token) {
+      console.log('Sign-in successful', session)
+      if (session && session.user) {
+        setUser(session.user);
+      } else if (session && session.access_token) {
         // fallback if user info saved separately
-        mgr.getCurrentUser().then((u) => { if (u) setUser(u); }).catch(() => {})
+        mgr.getCurrentUser().then((u) => { if (u) setUser(u); }).catch(() => { })
       }
     }).catch((err) => {
       setLoading(false)
@@ -46,7 +53,6 @@ export default function Home() {
 
   function signOut() {
     if (typeof chrome === 'undefined' || !chrome.storage) return
-    const mgr = new SessionManager()
     mgr.signOut().then(() => setUser(null)).catch(() => setUser(null))
   }
 
@@ -67,7 +73,7 @@ export default function Home() {
           </div>
 
           <div className={styles.progressTrack} aria-hidden>
-            <div className={styles.progressFill} style={{width: '92.7%'}} />
+            <div className={styles.progressFill} style={{ width: '92.7%' }} />
           </div>
         </div>
 
@@ -79,7 +85,7 @@ export default function Home() {
             <div className={styles.accountInfo}>
               <div className={styles.accountEmail}>{user ? (user.email || user.id) : 'Not signed in'}</div>
             </div>
-            <div className={styles.check} style={{visibility: user ? 'visible' : 'hidden'}}>✓</div>
+            <div className={styles.check} style={{ visibility: user ? 'visible' : 'hidden' }}>✓</div>
           </div>
 
           <div className={styles.divider} />
@@ -95,7 +101,7 @@ export default function Home() {
           </button>
 
           {errorMsg && (
-            <div style={{marginTop:12, color:'#f88', fontSize:13}}>
+            <div style={{ marginTop: 12, color: '#f88', fontSize: 13 }}>
               <strong>Error:</strong> {errorMsg}
             </div>
           )}

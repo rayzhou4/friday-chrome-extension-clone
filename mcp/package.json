@@ -1,0 +1,18 @@
+{
+  "name": "mcp-server",
+  "version": "0.1.0",
+  "description": "Local MCP-compatible tool server for testing (gmail_search mock)",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.21.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "googleapis": "^164.1.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

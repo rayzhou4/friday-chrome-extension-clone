@@ -23,12 +23,28 @@
   ],
   "content_scripts": [
     {
-      "matches": ["https://mail.google.com/*"],
-      "js": ["./src/inject.js"],
+      "matches": [
+        "https://mail.google.com/*"
+      ],
+      "js": [
+        "./src/inject.js"
+      ],
       "run_at": "document_idle"
     }
   ],
   "action": {
     "default_popup": "index.html"
+  },
+  "google_oauth2": {
+    "client_id": "992334442706-g3hst0j0ijiqaj3c4ga2tcfrabhek95r.apps.googleusercontent.com",
+    "scopes": [
+      "openid",
+      "email",
+      "profile"
+    ]
   }
 }
+// "https://www.googleapis.com/auth/userinfo.profile",
+// "https://www.googleapis.com/auth/userinfo.email",
+// "https://mail.google.com/",
+// "https://www.googleapis.com/auth/contacts.other.readonly"

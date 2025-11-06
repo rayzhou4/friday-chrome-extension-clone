@@ -1,0 +1,16 @@
+{
+  "name": "vercel-ai-backend",
+  "version": "0.1.0",
+  "description": "Local Express backend that proxies chat requests to OpenAI and MCP tools (gmail)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^2.0.63",
+    "@supabase/ssr": "^0.7.0",
+    "ai": "^5.0.88",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0"
+  }
+}
