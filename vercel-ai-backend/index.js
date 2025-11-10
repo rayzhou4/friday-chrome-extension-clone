@@ -290,14 +290,14 @@ async function streamChatWithFunctions(req, res, prompt, googleToken) {
                 console.log('[LOG] Tool execution successful, result length:', resultContent.length);
                 console.log('[LOG] Generated AI response text:', '\n"""\n' + resultContent.substring(0, 100) + (resultContent.length > 100 ? '...' : '') + '\n"""');
 
-                // Stream the tool result directly
-                const chunks = resultContent.split(/(\s+)/);
-                for (const chunk of chunks) {
-                    if (chunk.trim()) {
-                        sendChunk({ type: 'token', text: chunk + " " });
+                    // Stream the tool result directly, preserving newlines and spacing.
+                    // Split by newline but keep lines intact so the chat UI receives natural paragraph breaks.
+                    const lines = resultContent.split('\n');
+                    for (const line of lines) {
+                        // Send each line followed by a newline so the frontend preserves line breaks.
+                        sendChunk({ type: 'token', text: line + '\n' });
                         await new Promise(resolve => setTimeout(resolve, 10));
                     }
-                }
             } catch (error) {
                 console.error('[ERROR] Gmail tool execution failed:', error);
                 sendChunk({ type: 'token', text: `Error searching Gmail: ${error.message}` });
@@ -314,13 +314,13 @@ async function streamChatWithFunctions(req, res, prompt, googleToken) {
             console.log('[LOG] Generated AI response text:', '\n"""\n' + result.text.substring(0, 100) + (result.text.length > 100 ? '...' : '') + '\n"""');
 
             // Stream the AI-generated text
-            const chunks = result.text.split(/(\s+)/);
-            for (const chunk of chunks) {
-                if (chunk.trim()) {
-                    sendChunk({ type: 'token', text: chunk + " " });
+                // Stream the AI-generated text while preserving newlines.
+                // We split on newlines and send each line with a trailing newline so formatting is preserved.
+                const aiLines = (result.text || '').split('\n');
+                for (const line of aiLines) {
+                    sendChunk({ type: 'token', text: line + '\n' });
                     await new Promise(resolve => setTimeout(resolve, 10));
                 }
-            }
         }
 
     } catch (error) {

@@ -213,7 +213,7 @@ function createFloatingContainer() {
                     // Create assistant bubble where tokens will stream into
                     const assistantBubble = document.createElement('div');
                     assistantBubble.textContent = '';
-                    Object.assign(assistantBubble.style, { alignSelf: 'flex-start', background: '#021024', color: '#dbeafe', padding: '10px 12px', borderRadius: '14px', marginBottom: '8px', maxWidth: '85%', wordWrap: 'break-word', overflowWrap: 'break-word', whiteSpace: 'pre-line' });
+                    Object.assign(assistantBubble.style, { alignSelf: 'flex-start', background: '#021024', color: '#dbeafe', padding: '10px 12px', borderRadius: '14px', marginBottom: '8px', maxWidth: '85%', wordWrap: 'break-word', overflowWrap: 'break-word', whiteSpace: 'pre-wrap' });
                     messageArea.appendChild(assistantBubble);
                     messageArea.scrollTop = messageArea.scrollHeight;
 
