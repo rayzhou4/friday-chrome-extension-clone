@@ -5,10 +5,15 @@ import { supabase } from '../lib/supabaseClient.js';
 
 export class SessionManager {
   constructor() {
+    // Enforce singleton: return existing instance if already created
+    if (SessionManager._instance) return SessionManager._instance;
+
     this.currentSession = null;
     this.signInPromise = null;
     this.signInResolve = null;
-    this.manifest = chrome.runtime.getManifest();
+    this.manifest = (chrome && chrome.runtime && chrome.runtime.getManifest) ? chrome.runtime.getManifest() : {};
+
+    SessionManager._instance = this;
   }
 
   async signInWithGoogleIdentity(reason = "Google Identity API sign-in") {
@@ -77,6 +82,17 @@ export class SessionManager {
           user: user,
         }
 
+        // store in chrome.storage for extension-wide access
+        await new Promise((resolve) => {
+          const toStore = {
+            accessToken: code,
+            refreshToken: refresh_token,
+            providerToken: provider_token,
+            user: user,
+          };
+          chrome.storage.local.set(toStore, () => resolve());
+        });
+
         this.currentSession = session;
         return session;
       } finally {
@@ -97,7 +113,7 @@ export class SessionManager {
     return new Promise((resolve) => {
       supabase.auth.signOut().catch(() => { /* ignore errors */ });
 
-      chrome.storage.local.remove(['googleAccessToken', 'tokenExpiry', 'googleUser'], () => {
+      chrome.storage.local.remove(['accessToken', 'tokenExpiry', 'user', 'providerToken', 'refreshToken'], () => {
         this.currentSession = null;
         resolve(true);
       });
@@ -109,7 +125,7 @@ export class SessionManager {
   }
 
   // Returns a provider (Google) access token when available. This will first
-  // check local storage for a cached `googleAccessToken` and expiry, then
+  // check local storage for a cached `providerToken` and expiry, then
   // attempt to extract a provider token from the Supabase session if present.
   // The token returned is suitable for calling Google APIs (Gmail) and can be
   // forwarded to your backend/MCP server for server-side Gmail calls.
@@ -117,33 +133,15 @@ export class SessionManager {
     // Read from chrome storage first
     const items = await new Promise((resolve) => {
       try {
-        chrome.storage.local.get(['googleAccessToken', 'tokenExpiry'], (it) => resolve(it || {}));
+        chrome.storage.local.get(['providerToken', 'tokenExpiry'], (it) => resolve(it || {}));
       } catch (e) {
         resolve({});
       }
     });
 
-    const { googleAccessToken, tokenExpiry } = items || {};
-    if (googleAccessToken && tokenExpiry && tokenExpiry > Date.now() + 60000) {
-      return googleAccessToken;
-    }
-
-    // Fallback: try to get provider token from Supabase session (some SDKs
-    // expose `provider_token` or similar). This is best-effort for client-side
-    // flows where Supabase handled OAuth.
-    try {
-      const { data } = await supabase.auth.getSession();
-      const providerToken = data?.session?.provider_token || data?.session?.access_token || null;
-      const expiresIn = data?.session?.expires_in || 3600;
-      if (providerToken) {
-        // cache into chrome storage for subsequent requests
-        try {
-          await new Promise((resolve) => chrome.storage.local.set({ googleAccessToken: providerToken, tokenExpiry: Date.now() + expiresIn * 1000 }, resolve));
-        } catch (e) { /* ignore storage errors */ }
-        return providerToken;
-      }
-    } catch (e) {
-      // ignore and return null below
+    const { providerToken, tokenExpiry } = items || {};
+    if (providerToken && tokenExpiry && tokenExpiry > Date.now() + 60000) {
+      return providerToken;
     }
 
     return null;

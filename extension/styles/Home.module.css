@@ -236,6 +236,12 @@
   font-size: 15px;
 }
 
+.action:disabled {
+  cursor: not-allowed;
+  background: transparent !important;
+  color: #b3c6d9 !important;
+}
+
 .action:hover {
   background: rgba(255,255,255,0.02);
   color: #e6eef3;

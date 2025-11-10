@@ -4,7 +4,7 @@ import styles from "../styles/Home.module.css"
 import SessionManager from "../src/modules/auth"
 
 export default function Home() {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState(null)
   const [mgr, setMgr] = useState(null);
@@ -13,7 +13,9 @@ export default function Home() {
     // Create SessionManager and query current user (uses chrome.storage)
     if (typeof chrome !== 'undefined' && chrome.storage) {
       try {
-        if (mgr) return; // already initialized
+        
+        chrome.storage.local.get(['user'], (data) => {console.log(data.user); setUser(data.user);} );
+        if (mgr) return; // already initialized 
 
         const sessionManager = new SessionManager();
         sessionManager.getCurrentUser().then((u) => { if (u) setUser(u); }).catch(() => { });
@@ -26,6 +28,11 @@ export default function Home() {
   }, [])
 
   function startSignIn() {
+    if (user) {
+      console.warn('Already signed in');
+      return;
+    }
+
     if (typeof chrome === 'undefined' || !chrome.identity) {
       console.warn('chrome.identity not available; sign-in only works in extension context')
       return
@@ -95,7 +102,7 @@ export default function Home() {
             <span>Upgrade Credits Plan</span>
           </button>
 
-          <button className={styles.action} onClick={startSignIn} disabled={loading}>
+          <button className={styles.action} onClick={startSignIn} disabled={loading || user}>
             <span className={styles.icon}>➕</span>
             <span>{loading ? 'Signing in...' : (user ? 'Signed in' : 'Sign in with Google')}</span>
           </button>
@@ -106,7 +113,7 @@ export default function Home() {
             </div>
           )}
 
-          <button className={styles.action} onClick={signOut}>
+          <button className={styles.action} onClick={signOut} disabled={!user}>
             <span className={styles.icon}>↪️</span>
             <span>Logout</span>
           </button>
